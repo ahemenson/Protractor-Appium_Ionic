@@ -1,0 +1,54 @@
+var SpecReporter = require('jasmine-spec-reporter').SpecReporter;
+
+exports.config = {
+    allScriptsTimeout: 11000,
+    //directConnect: true, // set false and use selenium adrress to run 
+    //seleniumAddress: 'http://localhost:4444/wd/hub', // if want user selenium server
+
+    // capabilities: {
+    //    'browserName': 'chrome',
+    //    'chromeOptions': {
+    //        'mobileEmulation': {
+    //            // 'deviceName': 'iphone',
+    // 'deviceMetrics': { 'width': 412, 'height': 732 }, //Nexus 6P
+    //        },
+    //        'args': ['--window-size=520,840'],
+    //   }
+    //},
+    seleniumAddress: 'http://localhost:4723/wd/hub',
+
+   
+
+    // Reference: https://github.com/appium/sample-code/blob/master/sample-code/examples/node/helpers/caps.js
+    capabilities: {
+        browserName: 'chrome',
+        platformName: 'Android',
+        platformVersion: '7.0',
+        deviceName: 'Android Emulator',
+    },
+
+    baseUrl: 'http://10.0.2.2:8100',
+    framework: 'jasmine',
+    jasmineNodeOpts: {
+        showColors: true,
+        defaultTimeoutInterval: 30000,
+        print: function () { }
+    },
+    specs: ['./e2e/**/*.e2e-spec.ts'],
+  //  baseUrl: 'http://localhost:8100',
+    useAllAngular2AppRoots: true,
+    beforeLaunch: function () {
+
+        require('ts-node').register({
+            project: 'e2e'
+        });
+
+        require('connect')().use(require('serve-static')('www')).listen(8100);
+
+    },
+    onPrepare: function () {
+        jasmine.getEnv().addReporter(new SpecReporter()),
+            browser.ignoreSynchronization = true
+    }
+
+}
